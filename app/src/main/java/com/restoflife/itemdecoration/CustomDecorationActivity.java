@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.restoflife.itemdecoration.lib.UniversalItemDecoration;
 
@@ -24,6 +25,10 @@ public class CustomDecorationActivity extends AppCompatActivity {
 
 
     private ArrayList<String> listData = new ArrayList<>();
+
+    private int drawCount = 0;
+
+    private static final String TAG = "CustomDecorationActivit";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,25 +47,26 @@ public class CustomDecorationActivity extends AppCompatActivity {
             @Override
             public Decoration getItemOffsets(final int position) {
 
+                if (position == 3) {
+                    Decoration decoration = new Decoration() {
+                        @Override
+                        public void drawItemOffsets(Canvas c, int leftZ, int topZ, int rightZ, int bottomZ) {
 
-                Decoration decoration = new Decoration() {
-                    @Override
-                    public void drawItemOffsets(Canvas c, int leftZ, int topZ, int rightZ, int bottomZ) {
-
-                        //拿着Canvas 随便玩啦(不要在这搞复杂的东西，因为不会缓存)  leftZ是线在屏幕中的实际位置  其他同上
-                        if (position == 3) {
+                            drawCount++;
+                            Log.d(TAG, "drawItemOffsets: drawCount=" + drawCount);
+                            //拿着Canvas 随便玩啦(不要在这搞复杂的东西，因为不会缓存,而且你每一次滑动 都会调用一次这里)  leftZ是线在屏幕中的实际位置  其他同上
                             Paint paint = new Paint();
                             paint.setAntiAlias(true);
                             paint.setTextSize(50);
                             paint.setColor(Color.parseColor("#000000"));
                             c.drawText("啦啦啦啦 我是自定义的分割线标题", 20, bottomZ, paint);
                         }
-                    }
-                };
+                    };
 
-                decoration.top = 100;
-
-                return decoration;
+                    decoration.top = 100;
+                    return decoration;
+                }
+                return null;
             }
         });
 

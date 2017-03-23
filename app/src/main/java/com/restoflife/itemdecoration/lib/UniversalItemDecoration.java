@@ -76,9 +76,6 @@ public abstract class UniversalItemDecoration extends RecyclerView.ItemDecoratio
             //偏移量设置给item
             outRect.set(decoration.left, decoration.top, decoration.right, decoration.bottom);
 
-        } else {
-            //不要线
-            decoration = null;
         }
         //存起来在onDraw用
         decorations.put(position, decoration);
