@@ -24,6 +24,8 @@
 
         <activity android:name=".UniversalDecorationActivity" />
 
+        <activity android:name=".CustomDecorationActivity" />
+
     </application>
 
 </manifest>

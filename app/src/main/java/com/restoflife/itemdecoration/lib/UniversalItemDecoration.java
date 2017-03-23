@@ -4,15 +4,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.restoflife.itemdecoration.UniversalDecorationActivity.isLeft;
-import static com.restoflife.itemdecoration.UniversalDecorationActivity.isRight;
 
 /**
  * Created by yu on 2017/3/19.
@@ -23,16 +19,9 @@ import static com.restoflife.itemdecoration.UniversalDecorationActivity.isRight;
 
 public abstract class UniversalItemDecoration extends RecyclerView.ItemDecoration {
 
-    private Paint mPaint;
-    //线组
     private Map<Integer, Decoration> decorations = new HashMap<>();
 
     private static final String TAG = "UniversalItemDecoration";
-
-    public UniversalItemDecoration() {
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setStyle(Paint.Style.FILL);
-    }
 
     @Override
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
@@ -46,8 +35,7 @@ public abstract class UniversalItemDecoration extends RecyclerView.ItemDecoratio
             int position = string2Int(child.getTag().toString(), 0);
             Decoration decoration = decorations.get(position);
 
-            mPaint.setColor(decoration.decorationColor);
-
+            if (decoration == null) continue;
             RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) child.getLayoutParams();
 
             //view的上下左右包括 Margin
@@ -56,17 +44,18 @@ public abstract class UniversalItemDecoration extends RecyclerView.ItemDecoratio
             int right = child.getRight() + layoutParams.rightMargin;
             int top = child.getTop() - layoutParams.topMargin;
 
-            //下面的线
-            c.drawRect(left - decoration.left, bottom, right + decoration.right, bottom + decoration.bottom, mPaint);
-
-            //上面的线
-            c.drawRect(left - decoration.left, top - decoration.top, right + decoration.right, top, mPaint);
-
-            //左边的线
-            c.drawRect(left - decoration.left, top, left, bottom, mPaint);
-
-            //右边的线
-            c.drawRect(right, top, right + decoration.right, bottom, mPaint);
+            //下面的
+            if (decoration.bottom != 0)
+                decoration.drawItemOffsets(c, left - decoration.left, bottom, right + decoration.right, bottom + decoration.bottom);
+            //上面的
+            if (decoration.top != 0)
+                decoration.drawItemOffsets(c, left - decoration.left, top - decoration.top, right + decoration.right, top);
+            //左边的
+            if (decoration.left != 0)
+                decoration.drawItemOffsets(c, left - decoration.left, top, left, bottom);
+            //右边的
+            if (decoration.right != 0)
+                decoration.drawItemOffsets(c, right, top, right + decoration.right, bottom);
 
         }
 
@@ -86,9 +75,10 @@ public abstract class UniversalItemDecoration extends RecyclerView.ItemDecoratio
         if (decoration != null) {
             //偏移量设置给item
             outRect.set(decoration.left, decoration.top, decoration.right, decoration.bottom);
+
         } else {
             //不要线
-            decoration = new Decoration();
+            decoration = null;
         }
         //存起来在onDraw用
         decorations.put(position, decoration);
@@ -104,34 +94,41 @@ public abstract class UniversalItemDecoration extends RecyclerView.ItemDecoratio
     public abstract Decoration getItemOffsets(int position);
 
     /**
-     * 分割线对象
+     * 分割线
      */
-    public static class Decoration {
+    public abstract static class Decoration {
 
         public int left, right, top, bottom;
+
+        /**
+         * 根据偏移量设定的 当前的线在界面中的坐标
+         *
+         * @param leftZ
+         * @param topZ
+         * @param rightZ
+         * @param bottomZ
+         */
+        public abstract void drawItemOffsets(Canvas c, int leftZ, int topZ, int rightZ, int bottomZ);
+
+    }
+
+    public static class ColorDecoration extends Decoration {
+
+        private Paint mPaint;
         public int decorationColor = Color.BLACK;
 
-        public Decoration(int left, int right, int top, int bottom, int decorationColor) {
-            this.left = left;
-            this.right = right;
-            this.top = top;
-            this.bottom = bottom;
-            this.decorationColor = decorationColor;
-        }
-
-        public Decoration() {
+        public ColorDecoration() {
+            mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            mPaint.setStyle(Paint.Style.FILL);
         }
 
         @Override
-        public String toString() {
-            return "Decoration{" +
-                    "left=" + left +
-                    ", right=" + right +
-                    ", top=" + top +
-                    ", bottom=" + bottom +
-                    ", decorationColor=" + decorationColor +
-                    '}';
+        public void drawItemOffsets(Canvas c, int leftZ, int topZ, int rightZ, int bottomZ) {
+
+            mPaint.setColor(decorationColor);
+            c.drawRect(leftZ, topZ, rightZ, bottomZ, mPaint);
         }
+
     }
 
 
@@ -144,6 +141,7 @@ public abstract class UniversalItemDecoration extends RecyclerView.ItemDecoratio
 
 
     }
+
 
 
 }

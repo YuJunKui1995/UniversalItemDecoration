@@ -22,6 +22,12 @@
         android:id="@+id/bt_universal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="随意定制分割线" />s
+        android:text="自定义方向分割线" />
+
+    <Button
+        android:id="@+id/bt_custom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="自定义分割线" />
 
 </LinearLayout>

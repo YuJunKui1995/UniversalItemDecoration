@@ -41,7 +41,7 @@ public class VerticalDecorationActivity extends AppCompatActivity {
             public Decoration getItemOffsets(int position) {
 
                 //直接不理position  设置下面分割线 2个px  颜色BLACK
-                Decoration decoration = new Decoration();
+                ColorDecoration decoration = new ColorDecoration();
                 decoration.bottom = 2;
                 decoration.decorationColor = position % 2 == 0 ? Color.GREEN : Color.BLUE;
                 return decoration;

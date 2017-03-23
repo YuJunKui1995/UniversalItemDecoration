@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.bt_horizontal).setOnClickListener(this);
         findViewById(R.id.bt_vertical).setOnClickListener(this);
         findViewById(R.id.bt_universal).setOnClickListener(this);
+        findViewById(R.id.bt_custom).setOnClickListener(this);
 
     }
 
@@ -33,6 +34,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.bt_universal:
                 startActivity(new Intent(this, UniversalDecorationActivity.class));
+                break;
+
+            case R.id.bt_custom:
+                startActivity(new Intent(this, CustomDecorationActivity.class));
                 break;
         }
 

@@ -55,7 +55,7 @@ public class UniversalDecorationActivity extends AppCompatActivity {
             @Override
             public Decoration getItemOffsets(int position) {
 
-                Decoration decoration = new Decoration();
+                ColorDecoration decoration = new ColorDecoration();
 
                 //这里应该是你的判断逻辑  判断当前position 需要上下左右的分割线到底是多少 以及颜色
 
